@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import CurrencyInput from 'react-currency-input';
 
 const ExpenseNew = props => {
-  const [amount, setAmount] = useState('-$0');
+  const [amount, setAmount] = useState(0);
 
   return (
     <form className='expense-form' onSubmit={() => props.history.push('/list')}>
@@ -14,11 +15,12 @@ const ExpenseNew = props => {
 
         <div className='form-field amount ui input'>
           <div className='label'>Amount</div>
-          <input
+          <CurrencyInput
             className='field'
             type='text'
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            displayType={'text'} prefix={'-$'}
+            onChange={(values) => setAmount(values)}
           />
         </div>
 
