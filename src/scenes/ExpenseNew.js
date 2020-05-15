@@ -1,14 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import CurrencyInput from 'react-currency-input';
+import ExpenseContext from '../context/expenses/expenseContext';
 
 const ExpenseNew = props => {
+  const expenseContext = useContext(ExpenseContext);
+
   const [amount, setAmount] = useState(0);
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('Food');
+
+  const goToList = () => {
+    props.history.push('/list');
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (!amount || !title) {
+      alert('Please input Amount and Note');
+      return;
+    }
+
+    expenseContext.addExpense({ amount, title, category });
+    goToList();
+  };
 
   return (
-    <form className='expense-form' onSubmit={() => props.history.push('/list')}>
+    <form className='expense-form' onSubmit={onSubmit}>
       <div className='section top-section'>
         <div className='header-action'>
-          <button className='ui button action'>Cancel</button>
+          <button className='ui button action' onClick={goToList}>Cancel</button>
           <div className='title'>Expense</div>
           <button className='ui button action'>Done</button>
         </div>
@@ -19,8 +40,8 @@ const ExpenseNew = props => {
             className='field'
             type='text'
             value={amount}
-            displayType={'text'} prefix={'-$'}
-            onChange={(values) => setAmount(values)}
+            displaytype={'text'} prefix={'-$'}
+            onChange={(formatted, value) => { setAmount(value) }}
           />
         </div>
 
@@ -29,10 +50,14 @@ const ExpenseNew = props => {
           <div className='form-field'>
             <div className='label'>Category</div>
             <span className='clip-select'>
-              <select class="ui dropdown field">
-                <option value="1">Food</option>
-                <option value="2">Leisure</option>
-                <option value="3">Utilities</option>
+              <select 
+                className="ui dropdown field"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value='Food'>Food</option>
+                <option value='Leisure'>Leisure</option>
+                <option value='Utilities'>Utilities</option>
               </select>
             </span>
           </div>
@@ -47,7 +72,7 @@ const ExpenseNew = props => {
       <div className='section bottom-section'>
         <div className='notes form-field'>
           <div className='label'>Notes</div>
-          <textarea className='field' />
+          <textarea className='field' value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
       </div>
     </form>

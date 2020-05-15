@@ -3,8 +3,13 @@ import React, { useState } from 'react';
 const Searchbar = props => {
   const [text, setText] = useState('');
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    props.onSubmit(text);
+  };
+
   return (
-    <div className="search-bar">
+    <form className="search-bar" onSubmit={onSubmit}>
       <div className="ui icon input">
         <input 
           type="text" 
@@ -13,10 +18,10 @@ const Searchbar = props => {
           value={text}
           onChange={(e) => setText(e.target.value)} 
         />
-        <i class="search icon"></i>
+        <i className="search icon" onClick={onSubmit}></i>
       </div>
-    </div>
+    </form>
   )
 }
 
-export default Searchbar
+export default Searchbar;
